@@ -1,0 +1,86 @@
+.google-ad-container {
+  margin: 1.5rem 0;
+  min-height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.google-ad-placeholder {
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  border: 2px dashed #d4a574;
+  border-radius: 12px;
+  padding: 2rem;
+  margin: 1.5rem 0;
+  min-height: 250px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.ad-placeholder-content {
+  color: #666;
+}
+
+.ad-placeholder-content .ad-label {
+  display: inline-block;
+  background: #d4a574;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.ad-placeholder-content p {
+  margin: 0.5rem 0;
+  font-size: 1rem;
+}
+
+.ad-placeholder-content .ad-note {
+  font-size: 0.875rem;
+  font-style: italic;
+  color: #999;
+  margin-top: 1rem;
+}
+
+/* Responsive ads */
+.adsbygoogle {
+  display: block;
+}
+
+/* Different ad sizes */
+.google-ad-container.banner {
+  min-height: 90px;
+}
+
+.google-ad-container.rectangle {
+  min-height: 250px;
+}
+
+.google-ad-container.sidebar {
+  min-height: 600px;
+}
+
+.google-ad-container.leaderboard {
+  min-height: 90px;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .google-ad-placeholder {
+    padding: 1.5rem;
+    min-height: 200px;
+  }
+  
+  .ad-placeholder-content .ad-label {
+    font-size: 0.75rem;
+    padding: 0.4rem 0.8rem;
+  }
+  
+  .ad-placeholder-content p {
+    font-size: 0.875rem;
+  }
+}
