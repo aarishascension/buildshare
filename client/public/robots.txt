@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+
+Sitemap: https://buildshare-sj5n.vercel.app/sitemap.xml
