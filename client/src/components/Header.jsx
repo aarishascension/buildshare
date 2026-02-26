@@ -8,85 +8,64 @@ import './Header.css';
 function Header() {
   const { user, logout } = useAuth();
   const [showModal, setShowModal] = useState(false);
-  const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const [showMenu, setShowMenu] = useState(false);
   const navigate = useNavigate();
 
-  const handleNavigation = (path) => {
+  const handleNavigate = (path) => {
     navigate(path);
-    setShowMobileMenu(false);
-  };
-
-  const handleLogout = () => {
-    logout();
-    setShowMobileMenu(false);
+    setShowMenu(false);
   };
 
   return (
     <>
       <header>
         <div className="header-content">
-          <button 
-            className="hamburger-btn"
-            onClick={() => setShowMobileMenu(!showMobileMenu)}
-            aria-label="Toggle menu"
-          >
-            <span></span>
-            <span></span>
-            <span></span>
-          </button>
-          
-          <div className="logo" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
-            Build<span>Share</span>
+          <div className="header-left">
+            <button className="hamburger-btn" onClick={() => setShowMenu(!showMenu)}>
+              ☰
+            </button>
+            <div className="logo" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
+              Build<span>Share</span>
+            </div>
           </div>
-          
-          <div className={`nav-buttons ${showMobileMenu ? 'mobile-menu-open' : ''}`}>
-            <button 
-              className="close-menu-btn"
-              onClick={() => setShowMobileMenu(false)}
-              aria-label="Close menu"
-            >
-              ×
-            </button>
-            
-            <button className="btn btn-secondary" onClick={() => handleNavigation('/messages')}>
-              💬 Messages
-            </button>
-            {user.userType === 'developer' && (
-              <>
-                <button className="btn btn-secondary" onClick={() => handleNavigation('/analytics')}>
-                  📊 Analytics
-                </button>
-                <button className="btn btn-secondary" onClick={() => handleNavigation('/bookmarks')}>
-                  🔖 Saved
-                </button>
-              </>
-            )}
+          <div className="nav-buttons">
             <span 
               style={{ color: 'var(--cream)', marginRight: '1rem', cursor: 'pointer' }}
-              onClick={() => handleNavigation('/profile')}
+              onClick={() => navigate('/profile')}
             >
               {user.name}
             </span>
             <NotificationBell />
             {user.userType === 'developer' && (
-              <button className="btn btn-primary" onClick={() => { setShowModal(true); setShowMobileMenu(false); }}>
+              <button className="btn btn-primary" onClick={() => setShowModal(true)}>
                 Share Project
               </button>
             )}
-            <button className="btn btn-secondary" onClick={handleLogout}>
+            <button className="btn btn-secondary" onClick={logout}>
               Logout
             </button>
           </div>
         </div>
+        
+        {/* Hamburger Menu Dropdown */}
+        {showMenu && (
+          <div className="hamburger-menu">
+            <button className="menu-item" onClick={() => handleNavigate('/messages')}>
+              💬 Messages
+            </button>
+            {user.userType === 'developer' && (
+              <>
+                <button className="menu-item" onClick={() => handleNavigate('/analytics')}>
+                  📊 Analytics
+                </button>
+                <button className="menu-item" onClick={() => handleNavigate('/bookmarks')}>
+                  🔖 Saved
+                </button>
+              </>
+            )}
+          </div>
+        )}
       </header>
-      
-      {showMobileMenu && (
-        <div 
-          className="mobile-menu-overlay"
-          onClick={() => setShowMobileMenu(false)}
-        />
-      )}
-      
       {showModal && <NewPostModal onClose={() => setShowModal(false)} />}
     </>
   );
