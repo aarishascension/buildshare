@@ -28,7 +28,7 @@ function Login() {
         <div className="auth-logo">
           Build<span>Share</span>
         </div>
-        <p className="auth-subtitle">Showcase your Build, get discovered</p>
+        <p className="auth-subtitle">Showcase Your Work, Get Discovered</p>
 
         {error && <div className="error-message">{error}</div>}
 
