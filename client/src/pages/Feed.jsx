@@ -127,7 +127,17 @@ function Feed() {
               <div key={project._id}>
                 <ProjectPost
                   project={project}
-                  onUpdate={() => fetchProjects(1)}
+                  onUpdate={(updatedProject) => {
+                    if (updatedProject) {
+                      // Update specific project in state
+                      setProjects(prev => prev.map(p => 
+                        p._id === updatedProject._id ? updatedProject : p
+                      ));
+                    } else {
+                      // Project was deleted, remove from state
+                      setProjects(prev => prev.filter(p => p._id !== project._id));
+                    }
+                  }}
                 />
                 {/* Show Google Ad after every 3 projects */}
                 {(index + 1) % 3 === 0 && (

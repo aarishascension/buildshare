@@ -34,8 +34,10 @@ function ProjectPost({ project, onUpdate }) {
 
   const handleSave = async () => {
     try {
-      await axios.post(`/api/projects/${project._id}/save`);
-      onUpdate?.();
+      const { data } = await axios.post(`/api/projects/${project._id}/save`);
+      // Fetch updated project to get new save count
+      const { data: updatedProject } = await axios.get(`/api/projects/${project._id}`);
+      onUpdate?.(updatedProject);
     } catch (error) {
       alert('Failed to save project');
     }
@@ -50,7 +52,9 @@ function ProjectPost({ project, onUpdate }) {
         content: responseText
       });
       setResponseText('');
-      onUpdate?.();
+      // Fetch updated project
+      const { data: updatedProject } = await axios.get(`/api/projects/${project._id}`);
+      onUpdate?.(updatedProject);
     } catch (error) {
       alert(error.response?.data?.error || 'Failed to post response');
     }
@@ -59,7 +63,9 @@ function ProjectPost({ project, onUpdate }) {
   const handleHelpful = async (responseId) => {
     try {
       await axios.post(`/api/projects/${project._id}/responses/${responseId}/helpful`);
-      onUpdate?.();
+      // Fetch updated project
+      const { data: updatedProject } = await axios.get(`/api/projects/${project._id}`);
+      onUpdate?.(updatedProject);
     } catch (error) {
       alert('Failed to mark as helpful');
     }
@@ -72,7 +78,7 @@ function ProjectPost({ project, onUpdate }) {
 
     try {
       await axios.delete(`/api/projects/${project._id}`);
-      onUpdate?.();
+      onUpdate?.(null); // Pass null to indicate deletion
     } catch (error) {
       alert(error.response?.data?.error || 'Failed to delete project');
     }
