@@ -58,12 +58,13 @@ function Profile() {
     try {
       // Create or get conversation
       const { data } = await axios.post('/api/messages', {
-        recipientId: profile.id,
+        recipientId: profile._id,
         content: `Hi ${profile.name}!`
       });
       // Navigate to messages page
       navigate('/messages');
     } catch (error) {
+      console.error('Message error:', error);
       alert('Failed to start conversation');
     }
   };
@@ -71,7 +72,7 @@ function Profile() {
   if (loading) return <div className="container">Loading...</div>;
   if (!profile) return <div className="container">User not found</div>;
 
-  const isOwnProfile = currentUser.id === profile.id;
+  const isOwnProfile = currentUser.id === profile._id;
 
   return (
     <div className="container">
