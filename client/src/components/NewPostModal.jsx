@@ -18,9 +18,9 @@ function NewPostModal({ onClose, onProjectCreated }) {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      // Check file size (max 2MB)
-      if (file.size > 2 * 1024 * 1024) {
-        alert('Image size should be less than 2MB');
+      // Check file size (max 500KB for better performance)
+      if (file.size > 500 * 1024) {
+        alert('Image size should be less than 500KB. Please use a smaller image or compress it.');
         return;
       }
       
@@ -32,8 +32,32 @@ function NewPostModal({ onClose, onProjectCreated }) {
 
       const reader = new FileReader();
       reader.onloadend = () => {
-        setImagePreview(reader.result);
-        setFormData({ ...formData, image: reader.result });
+        // Compress image if needed
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          let width = img.width;
+          let height = img.height;
+          
+          // Resize if too large (max 800px width)
+          const maxWidth = 800;
+          if (width > maxWidth) {
+            height = (height * maxWidth) / width;
+            width = maxWidth;
+          }
+          
+          canvas.width = width;
+          canvas.height = height;
+          
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+          
+          // Convert to base64 with compression
+          const compressedImage = canvas.toDataURL('image/jpeg', 0.7);
+          setImagePreview(compressedImage);
+          setFormData({ ...formData, image: compressedImage });
+        };
+        img.src = reader.result;
       };
       reader.readAsDataURL(file);
     }
@@ -51,7 +75,13 @@ function NewPostModal({ onClose, onProjectCreated }) {
       onProjectCreated?.(data);
       onClose();
     } catch (error) {
-      alert(error.response?.data?.error || 'Failed to create project');
+      console.error('Error creating project:', error);
+      const errorMessage = error.response?.data?.error || error.message || 'Failed to create project';
+      if (errorMessage.includes('too large') || errorMessage.includes('size')) {
+        alert('Image is too large. Please use a smaller image (under 500KB).');
+      } else {
+        alert(errorMessage);
+      }
     }
   };
 
@@ -116,7 +146,7 @@ function NewPostModal({ onClose, onProjectCreated }) {
                 <div className="image-upload-placeholder">
                   <span style={{ fontSize: '48px' }}>📷</span>
                   <p>Click to upload image</p>
-                  <small>Max size: 2MB</small>
+                  <small>Max size: 500KB (auto-compressed)</small>
                 </div>
               </label>
             ) : (
