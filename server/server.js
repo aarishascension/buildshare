@@ -299,6 +299,27 @@ app.post('/api/projects/:id/responses', auth, async (req, res) => {
   }
 });
 
+// Delete project
+app.delete('/api/projects/:id', auth, async (req, res) => {
+  try {
+    const project = await Project.findById(req.params.id);
+    
+    if (!project) {
+      return res.status(404).json({ error: 'Project not found' });
+    }
+    
+    // Check if user is the owner
+    if (project.user.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ error: 'Not authorized to delete this project' });
+    }
+    
+    await Project.findByIdAndDelete(req.params.id);
+    res.json({ message: 'Project deleted successfully' });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
 // Toggle save project
 app.post('/api/projects/:id/save', auth, async (req, res) => {
   try {

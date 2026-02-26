@@ -294,3 +294,14 @@
 .project-image:hover {
   transform: scale(1.05);
 }
+
+
+/* Delete Button */
+.delete-btn {
+  color: #dc3545 !important;
+}
+
+.delete-btn:hover {
+  background: #fff5f5 !important;
+  color: #c82333 !important;
+}

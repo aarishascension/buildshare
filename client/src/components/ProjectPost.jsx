@@ -63,6 +63,19 @@ function ProjectPost({ project, onUpdate }) {
     }
   };
 
+  const handleDelete = async () => {
+    if (!window.confirm('Are you sure you want to delete this project? This action cannot be undone.')) {
+      return;
+    }
+
+    try {
+      await axios.delete(`/api/projects/${project._id}`);
+      onUpdate?.();
+    } catch (error) {
+      alert(error.response?.data?.error || 'Failed to delete project');
+    }
+  };
+
   return (
     <div className="post fade-in">
       <div className="post-header">
@@ -132,6 +145,11 @@ function ProjectPost({ project, onUpdate }) {
           <button className="action-btn">
             📤 Share
           </button>
+          {isOwner && (
+            <button className="action-btn delete-btn" onClick={handleDelete}>
+              🗑️ Delete
+            </button>
+          )}
         </div>
       </div>
 
