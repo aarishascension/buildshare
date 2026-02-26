@@ -197,12 +197,13 @@ app.post('/api/projects', auth, async (req, res) => {
       return res.status(403).json({ error: 'Only developers can create projects' });
     }
     
-    const { title, description, technologies, demoUrl, githubUrl, lookingFor } = req.body;
+    const { title, description, images, technologies, demoUrl, githubUrl, lookingFor } = req.body;
     
     const project = new Project({
       user: req.user._id,
       title,
       description,
+      images: images || [],
       technologies,
       demoUrl,
       githubUrl,
