@@ -112,7 +112,45 @@ textarea {
 }
 
 @media (max-width: 768px) {
+  body {
+    font-size: 15px;
+  }
+
   .container {
     padding: 2rem 1rem;
+  }
+
+  .btn {
+    padding: 0.6rem 1.25rem;
+    font-size: 0.9rem;
+  }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="url"],
+  textarea,
+  select {
+    padding: 0.65rem;
+    font-size: 0.9rem;
+  }
+
+  textarea {
+    min-height: 80px;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    font-size: 14px;
+  }
+
+  .container {
+    padding: 1rem 0.75rem;
+  }
+
+  .btn {
+    padding: 0.55rem 1rem;
+    font-size: 0.85rem;
   }
 }
