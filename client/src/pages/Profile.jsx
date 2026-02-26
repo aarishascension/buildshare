@@ -6,6 +6,7 @@ import ProjectPost from '../components/ProjectPost';
 import GoogleAd from '../components/GoogleAd';
 import './Profile.css';
 
+// Profile page component
 function Profile() {
   const { userId } = useParams();
   const { user: currentUser } = useAuth();
