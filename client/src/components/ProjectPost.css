@@ -246,3 +246,18 @@
 .response-submit:hover {
   background: var(--accent-dark);
 }
+
+/* Project Image Styles */
+.project-image-container {
+  margin: 1rem 0;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.project-image {
+  width: 100%;
+  max-height: 400px;
+  object-fit: cover;
+  display: block;
+}

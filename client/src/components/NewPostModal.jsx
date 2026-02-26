@@ -6,12 +6,43 @@ function NewPostModal({ onClose, onProjectCreated }) {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
+    image: '',
     technologies: [],
     demoUrl: '',
     githubUrl: '',
     lookingFor: 'full-time'
   });
   const [tagInput, setTagInput] = useState('');
+  const [imagePreview, setImagePreview] = useState('');
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      // Check file size (max 2MB)
+      if (file.size > 2 * 1024 * 1024) {
+        alert('Image size should be less than 2MB');
+        return;
+      }
+      
+      // Check file type
+      if (!file.type.startsWith('image/')) {
+        alert('Please select an image file');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+        setFormData({ ...formData, image: reader.result });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const removeImage = () => {
+    setImagePreview('');
+    setFormData({ ...formData, image: '' });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -70,6 +101,32 @@ function NewPostModal({ onClose, onProjectCreated }) {
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               required
             />
+          </div>
+          <div className="form-group">
+            <label>Project Image (optional)</label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+              style={{ display: 'none' }}
+              id="imageUpload"
+            />
+            {!imagePreview ? (
+              <label htmlFor="imageUpload" className="image-upload-label">
+                <div className="image-upload-placeholder">
+                  <span style={{ fontSize: '48px' }}>📷</span>
+                  <p>Click to upload image</p>
+                  <small>Max size: 2MB</small>
+                </div>
+              </label>
+            ) : (
+              <div className="image-preview-container">
+                <img src={imagePreview} alt="Preview" className="image-preview" />
+                <button type="button" className="remove-image" onClick={removeImage}>
+                  Remove Image
+                </button>
+              </div>
+            )}
           </div>
           <div className="form-group">
             <label>Technologies</label>

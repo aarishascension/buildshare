@@ -86,6 +86,12 @@ function ProjectPost({ project, onUpdate }) {
       <div className="post-body">
         <p className="project-description">{project.description}</p>
 
+        {project.image && (
+          <div className="project-image-container">
+            <img src={project.image} alt={project.title} className="project-image" />
+          </div>
+        )}
+
         {project.technologies.length > 0 && (
           <div className="project-tags">
             {project.technologies.map(tech => (
