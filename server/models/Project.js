@@ -33,10 +33,9 @@ const projectSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  image: {
-    type: String,
-    default: ''
-  },
+  images: [{
+    type: String
+  }],
   technologies: [{
     type: String,
     trim: true

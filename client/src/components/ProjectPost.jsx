@@ -86,9 +86,13 @@ function ProjectPost({ project, onUpdate }) {
       <div className="post-body">
         <p className="project-description">{project.description}</p>
 
-        {project.image && (
-          <div className="project-image-container">
-            <img src={project.image} alt={project.title} className="project-image" />
+        {project.images && project.images.length > 0 && (
+          <div className={`project-images-grid grid-${project.images.length}`}>
+            {project.images.map((image, index) => (
+              <div key={index} className="project-image-container">
+                <img src={image} alt={`${project.title} - ${index + 1}`} className="project-image" />
+              </div>
+            ))}
           </div>
         )}
 

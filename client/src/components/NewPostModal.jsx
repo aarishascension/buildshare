@@ -6,33 +6,40 @@ function NewPostModal({ onClose, onProjectCreated }) {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
-    image: '',
+    images: [],
     technologies: [],
     demoUrl: '',
     githubUrl: '',
     lookingFor: 'full-time'
   });
   const [tagInput, setTagInput] = useState('');
-  const [imagePreview, setImagePreview] = useState('');
+  const [imagePreviews, setImagePreviews] = useState([]);
 
   const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      // Check file size (max 500KB for better performance)
+    const files = Array.from(e.target.files);
+    
+    // Check if adding these files would exceed 4 images
+    if (imagePreviews.length + files.length > 4) {
+      alert('Maximum 4 images allowed per post');
+      return;
+    }
+    
+    files.forEach(file => {
+      // Check file size (max 500KB)
       if (file.size > 500 * 1024) {
-        alert('Image size should be less than 500KB. Please use a smaller image or compress it.');
+        alert(`${file.name} is too large. Please use images under 500KB.`);
         return;
       }
       
       // Check file type
       if (!file.type.startsWith('image/')) {
-        alert('Please select an image file');
+        alert(`${file.name} is not an image file`);
         return;
       }
 
       const reader = new FileReader();
       reader.onloadend = () => {
-        // Compress image if needed
+        // Compress image
         const img = new Image();
         img.onload = () => {
           const canvas = document.createElement('canvas');
@@ -54,18 +61,19 @@ function NewPostModal({ onClose, onProjectCreated }) {
           
           // Convert to base64 with compression
           const compressedImage = canvas.toDataURL('image/jpeg', 0.7);
-          setImagePreview(compressedImage);
-          setFormData({ ...formData, image: compressedImage });
+          
+          setImagePreviews(prev => [...prev, compressedImage]);
+          setFormData(prev => ({ ...prev, images: [...prev.images, compressedImage] }));
         };
         img.src = reader.result;
       };
       reader.readAsDataURL(file);
-    }
+    });
   };
 
-  const removeImage = () => {
-    setImagePreview('');
-    setFormData({ ...formData, image: '' });
+  const removeImage = (index) => {
+    setImagePreviews(prev => prev.filter((_, i) => i !== index));
+    setFormData(prev => ({ ...prev, images: prev.images.filter((_, i) => i !== index) }));
   };
 
   const handleSubmit = async (e) => {
@@ -133,28 +141,34 @@ function NewPostModal({ onClose, onProjectCreated }) {
             />
           </div>
           <div className="form-group">
-            <label>Project Image (optional)</label>
+            <label>Project Images (optional, max 4)</label>
             <input
               type="file"
               accept="image/*"
               onChange={handleImageChange}
+              multiple
               style={{ display: 'none' }}
               id="imageUpload"
             />
-            {!imagePreview ? (
+            {imagePreviews.length < 4 && (
               <label htmlFor="imageUpload" className="image-upload-label">
                 <div className="image-upload-placeholder">
                   <span style={{ fontSize: '48px' }}>📷</span>
-                  <p>Click to upload image</p>
-                  <small>Max size: 500KB (auto-compressed)</small>
+                  <p>Click to upload images ({imagePreviews.length}/4)</p>
+                  <small>Max size: 500KB each (auto-compressed)</small>
                 </div>
               </label>
-            ) : (
-              <div className="image-preview-container">
-                <img src={imagePreview} alt="Preview" className="image-preview" />
-                <button type="button" className="remove-image" onClick={removeImage}>
-                  Remove Image
-                </button>
+            )}
+            {imagePreviews.length > 0 && (
+              <div className="image-previews-grid">
+                {imagePreviews.map((preview, index) => (
+                  <div key={index} className="image-preview-item">
+                    <img src={preview} alt={`Preview ${index + 1}`} className="image-preview-thumb" />
+                    <button type="button" className="remove-image-btn" onClick={() => removeImage(index)}>
+                      ×
+                    </button>
+                  </div>
+                ))}
               </div>
             )}
           </div>
