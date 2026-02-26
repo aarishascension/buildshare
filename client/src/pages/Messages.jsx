@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import axios from 'axios';
+import axios from '../config/axios';
 import { useAuth } from '../context/AuthContext';
 import { io } from 'socket.io-client';
 import './Messages.css';

@@ -27,10 +27,17 @@ dotenv.config();
 
 const app = express();
 const httpServer = createServer(app);
+
+// Parse CORS origins for Socket.io
+const corsOrigins = process.env.CORS_ORIGIN 
+  ? process.env.CORS_ORIGIN.split(',').map(origin => origin.trim())
+  : ['http://localhost:3001'];
+
 const io = new Server(httpServer, {
   cors: {
-    origin: process.env.CORS_ORIGIN || 'http://localhost:3001',
-    credentials: true
+    origin: corsOrigins,
+    credentials: true,
+    methods: ['GET', 'POST']
   }
 });
 

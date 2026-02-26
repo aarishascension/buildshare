@@ -436,3 +436,34 @@
     grid-column: 1;
   }
 }
+
+/* Message button styles */
+.btn-message-small {
+  background: transparent;
+  border: 1px solid #d4a574;
+  color: #d4a574;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.2s;
+  margin-left: auto;
+}
+
+.btn-message-small:hover {
+  background: #d4a574;
+  color: #1a1a1a;
+}
+
+.response-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+}
+
+.response-header .btn-message-small {
+  margin-left: auto;
+  font-size: 14px;
+  padding: 4px 8px;
+}

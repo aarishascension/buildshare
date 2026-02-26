@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import ProjectPost from '../components/ProjectPost';
@@ -9,6 +9,7 @@ import './Profile.css';
 function Profile() {
   const { userId } = useParams();
   const { user: currentUser } = useAuth();
+  const navigate = useNavigate();
   const [profile, setProfile] = useState(null);
   const [projects, setProjects] = useState([]);
   const [stats, setStats] = useState({ projectCount: 0, totalResponses: 0, totalSaves: 0 });
@@ -49,6 +50,20 @@ function Profile() {
       fetchProfile();
     } catch (error) {
       alert('Failed to update profile');
+    }
+  };
+
+  const handleMessage = async () => {
+    try {
+      // Create or get conversation
+      const { data } = await axios.post('/api/messages', {
+        recipientId: profile.id,
+        content: `Hi ${profile.name}!`
+      });
+      // Navigate to messages page
+      navigate('/messages');
+    } catch (error) {
+      alert('Failed to start conversation');
     }
   };
 
@@ -115,11 +130,16 @@ function Profile() {
                 {profile.company && <span>🏢 {profile.company}</span>}
               </div>
               {profile.bio && <p className="profile-bio">{profile.bio}</p>}
-              {isOwnProfile && (
-                <button className="btn btn-secondary" onClick={() => setIsEditing(true)}>
-                  Edit Profile
-                </button>
-              )}
+              <div className="profile-actions">
+                {isOwnProfile ? (
+                  <button className="btn btn-secondary" onClick={() => setIsEditing(true)}>
+                    Edit Profile
+                  </button>
+                ) : (
+                  <button className="btn btn-primary" onClick={handleMessage}>
+                    💬 Message
+                  </button>
+                )}
             </>
           )}
         </div>

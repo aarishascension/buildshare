@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
 import ProjectUpdates from './ProjectUpdates';
@@ -6,6 +7,7 @@ import './ProjectPost.css';
 
 function ProjectPost({ project, onUpdate }) {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [responseText, setResponseText] = useState('');
   const [showResponses, setShowResponses] = useState(false);
   const [showUpdates, setShowUpdates] = useState(false);
@@ -76,17 +78,75 @@ function ProjectPost({ project, onUpdate }) {
     }
   };
 
+  const handleMessageAuthor = async () => {
+    try {
+      await axios.post('/api/messages', {
+        recipientId: project.user._id,
+        content: `Hi ${project.user.name}, I'm interested in your project "${project.title}"`
+      });
+      navigate('/messages');
+    } catch (error) {
+      alert('Failed to start conversation');
+    }
+  };
+
+  const handleMessageResponder = async (responder) => {
+    try {
+      await axios.post('/api/messages', {
+        recipientId: responder._id,
+        content: `Hi ${responder.name}!`
+      });
+      navigate('/messages');
+    } catch (error) {
+      alert('Failed to start conversation');
+    }
+  };
+
+  const handleShare = async () => {
+    const shareUrl = `${window.location.origin}/projects/${project._id}`;
+    const shareText = `Check out this project: ${project.title} by ${project.user.name}`;
+    
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: project.title,
+          text: shareText,
+          url: shareUrl
+        });
+      } catch (error) {
+        if (error.name !== 'AbortError') {
+          copyToClipboard(shareUrl);
+        }
+      }
+    } else {
+      copyToClipboard(shareUrl);
+    }
+  };
+
+  const copyToClipboard = (text) => {
+    navigator.clipboard.writeText(text).then(() => {
+      alert('Link copied to clipboard!');
+    }).catch(() => {
+      alert('Failed to copy link');
+    });
+  };
+
   return (
     <div className="post fade-in">
       <div className="post-header">
         <div className="user-info">
-          <div className="avatar">
+          <div className="avatar" onClick={() => navigate(`/profile/${project.user._id}`)} style={{ cursor: 'pointer' }}>
             {project.user.name.substring(0, 2).toUpperCase()}
           </div>
-          <div className="user-details">
+          <div className="user-details" onClick={() => navigate(`/profile/${project.user._id}`)} style={{ cursor: 'pointer' }}>
             <h3>{project.user.name}</h3>
             <div className="user-title">{project.user.title || 'Developer'}</div>
           </div>
+          {!isOwner && (
+            <button className="btn-message-small" onClick={handleMessageAuthor} title="Message author">
+              💬
+            </button>
+          )}
         </div>
         <h2 className="project-title">{project.title}</h2>
         <div className="post-meta">
@@ -142,7 +202,7 @@ function ProjectPost({ project, onUpdate }) {
           <button className="action-btn" onClick={handleSave}>
             🔖 Save
           </button>
-          <button className="action-btn">
+          <button className="action-btn" onClick={handleShare}>
             📤 Share
           </button>
           {isOwner && (
@@ -175,13 +235,24 @@ function ProjectPost({ project, onUpdate }) {
                     🏢 {response.user.company || 'Company'}
                   </div>
                 </div>
+                {response.user._id !== user.id && (
+                  <button 
+                    className="btn-message-small" 
+                    onClick={() => handleMessageResponder(response.user)}
+                    title="Message"
+                  >
+                    💬
+                  </button>
+                )}
               </div>
               <div className="response-content">{response.content}</div>
               <div className="response-actions">
                 <button className="response-btn" onClick={() => handleHelpful(response._id)}>
                   👍 Helpful ({response.helpful?.length || 0})
                 </button>
-                <button className="response-btn">💬 Reply</button>
+                <button className="response-btn" onClick={() => handleMessageResponder(response.user)}>
+                  💬 Reply
+                </button>
               </div>
             </div>
           ))}
