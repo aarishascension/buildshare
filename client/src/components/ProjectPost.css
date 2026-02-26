@@ -5,6 +5,8 @@
   margin-bottom: 2rem;
   overflow: hidden;
   transition: all 0.3s ease;
+  width: 100%;
+  max-width: 100%;
 }
 
 .post:hover {
@@ -70,6 +72,9 @@
 .project-description {
   margin-bottom: 1.5rem;
   line-height: 1.7;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .project-tags {
@@ -105,6 +110,8 @@
   align-items: center;
   gap: 0.3rem;
   transition: color 0.3s ease;
+  word-break: break-all;
+  max-width: 100%;
 }
 
 .project-link:hover {
@@ -254,6 +261,8 @@
   gap: 0.5rem;
   border-radius: 8px;
   overflow: hidden;
+  width: 100%;
+  max-width: 100%;
 }
 
 .project-images-grid.grid-1 {
