@@ -53,15 +53,13 @@ function Header() {
             <button className="menu-item" onClick={() => handleNavigate('/messages')}>
               💬 Messages
             </button>
+            <button className="menu-item" onClick={() => handleNavigate('/bookmarks')}>
+              🔖 Saved
+            </button>
             {user.userType === 'developer' && (
-              <>
-                <button className="menu-item" onClick={() => handleNavigate('/analytics')}>
-                  📊 Analytics
-                </button>
-                <button className="menu-item" onClick={() => handleNavigate('/bookmarks')}>
-                  🔖 Saved
-                </button>
-              </>
+              <button className="menu-item" onClick={() => handleNavigate('/analytics')}>
+                📊 Analytics
+              </button>
             )}
           </div>
         )}

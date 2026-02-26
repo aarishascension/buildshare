@@ -35,7 +35,7 @@ function Register() {
         <div className="auth-logo">
           Build<span>Share</span>
         </div>
-        <p className="auth-subtitle">Join the Community</p>
+        <p className="auth-subtitle">Showcase your Build, get discovered</p>
 
         {error && <div className="error-message">{error}</div>}
 
