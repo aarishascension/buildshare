@@ -140,6 +140,7 @@ function Profile() {
                     💬 Message
                   </button>
                 )}
+              </div>
             </>
           )}
         </div>
